@@ -103,15 +103,9 @@ async def fetch_data():
                 hml_id = hml["id"]
                 if r.get(hml_id) is None:
                     hml_obj = HML(**hml)
-                    # site_data = await async_get(hml_url, headers=headers)
-                    # forecasts = await format_xml(site_data["productText"])
                     await publish(channel, hml_obj)
-                    # forecast_hash = create_forecast_hash(hml_id, forecasts)
                     r.set(hml_id, hml_obj.json())
                     r.expire(hml_id, 604800)  # exires after a week
         except redis.exceptions.ConnectionError as e:
             raise e("Cannot run Redis service") 
         
-
-# if __name__ == "__main__":
-#     asyncio.run(publish())
